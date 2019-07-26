@@ -73,7 +73,7 @@ sudo apt-get install -y snips-injection
 
 ### 1.5.0
 
-* (unltdnetworx) removal of language support, may come back
+* (unltdnetworx) official release for kraftcom
 
 ### 1.4.0
 
