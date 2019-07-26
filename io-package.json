@@ -1,6 +1,6 @@
 {
     "common": {
-        "name": "snips",
+        "name": "kraftcomSnips",
         "version": "1.5.0",
         "news": {
             "1.5.0": {
@@ -36,10 +36,10 @@
                 "de": "Aktivierung/Deaktivierung der Hotword-Erkennung für jeden Satelliten einstellbar"
             }
         },
-		"title": "Snips-Offline Speech2Text",
+		"title": "kraftcomSnips-Offline Speech2Text",
         "titleLang": {
-            "en": "Snips-Offline speech2text",
-            "de": "Snips-Offline Speech2Text"
+            "en": "kraftcomSnips-Offline speech2text",
+            "de": "kraftcomSnips-Offline Speech2Text"
         },
         "desc": {
             "en": "ioBroker snips",
@@ -58,9 +58,9 @@
         "icon": "snips.png",
         "materialize": true,
         "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/unltdnetworx/ioBroker.snips/master/admin/snips.png",
+        "extIcon": "https://raw.githubusercontent.com/unltdnetworx/ioBroker.kraftcomSnips/master/admin/snips.png",
         "keywords": ["snips", "GUI", "graphical", "scada"],
-        "readme": "https://github.com/unltdnetworx/ioBroker.snips/blob/master/README.md",
+        "readme": "https://github.com/unltdnetworx/ioBroker.kraftcomSnips/blob/master/README.md",
         "loglevel": "info",
         "type": "iot-systems",
         "license": "MIT",
