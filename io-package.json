@@ -1,8 +1,12 @@
 {
     "common": {
         "name": "kraftcomSnips",
-        "version": "1.5.0",
+        "version": "1.6.0",
         "news": {
+            "1.6.0": {
+                "en": "guestfolder support added",
+                "de": "Unterstützung für Gästemappe"
+            },
             "1.5.0": {
                 "en": "official release for kraftcom",
                 "de": "Offizielles Release für Kraftcom"

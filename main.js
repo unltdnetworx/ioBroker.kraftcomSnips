@@ -334,6 +334,19 @@ function main() {
         native: {}
     });
 
+    adapter.setObjectNotExists(adapter.namespace + '.send.inject.folder', {
+        type: 'state',
+        common: {
+            name: 'folder inject',
+            desc: 'send inject for folder-slot to snips',
+            type: 'string',
+            role: 'text',
+            read: true,
+            write: true
+        },
+        native: {}
+    });
+
 	adapter.setObjectNotExists(adapter.namespace + '.hotword.wait', {
         type: 'state',
         common: {

@@ -71,6 +71,10 @@ sudo apt-get install -y snips-injection
 
 ## Changelog
 
+### 1.6.0
+
+* (unltdnetworx) guestfolder support added
+
 ### 1.5.0
 
 * (unltdnetworx) official release for kraftcom
