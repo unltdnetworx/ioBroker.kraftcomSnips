@@ -63,6 +63,64 @@ function startAdapter(options) {
             }
         }
 
+        if(id.endsWith('.send.continueSession')){
+            var regexSessionID = RegExp(/\[([^\[]+)\]$/,'g');
+            var regexIntentFilter = RegExp(/\[([^\[]+)\]\ /,'g');
+            let roomname = id.substring(id.indexOf('devices.')+8, id.length-21);
+
+            adapter.getState('devices.' + roomname + '.sessionID', function (err, session_id) {
+                if (session_id.val !== null) {
+                    let objIntentFilter = regexIntentFilter.exec(state.val);
+                    let strIntentFilter;
+                    let arrIntentFilter = [];
+                    let arrIntents = objIntentFilter[0].substr(1,objIntentFilter[0].length-3).split(',')
+                    for ( let intent in arrIntents) {
+                        arrIntentFilter.push("kraftcome:" + arrIntents[intent] + adapter.config.snipsLanguage.toUpperCase())
+                    }
+
+                    let responseText = state.val.substring(0,state.val.length-(objIntentFilter[0].length+1 + session_id.val.length+3));
+
+                    if (client) client.onStateChange('hermes/dialogueManager/continueSession',{"sessionId":session_id.val, "text":responseText, "intentFilter": arrIntentFilter},'say');
+                } 
+            })   
+        }
+
+        if(id.endsWith('.all.send.response')){
+            var regexSessionID = RegExp(/\[([^\[]+)\]$/,'g');
+            //SessionId aus text2command auslesen, falls vorher übergeben
+            adapter.getForeignState('text2command.' + adapter.config.topic + '.text', function (err, t2cSessionID) {
+                let objSessionID = regexSessionID.exec(t2cSessionID.val);
+                if (objSessionID !== null) {
+                    //Aufruf durch text2command mit enthaltener SessionID
+                    //Abbruch, falls Filter zutrifft ("verstehe"), nur möglich von t2c
+                    if (state.val.indexOf(adapter.config.filter) !== -1) {
+                        if (client) client.onStateChange('hermes/dialogueManager/endSession',{"sessionId":objSessionID[1]},'say');
+                    } else {
+                        if (client) client.onStateChange('hermes/dialogueManager/endSession',{"sessionId":objSessionID[1], "text":state.val},'say');
+                    }
+                    //text2command leeren, um nächste Ausgabe nicht an gleiches Ziel zu senden (SessionID)
+                    adapter.setForeignState('text2command.' + adapter.config.topic + '.text', "");
+                } 
+            })   
+        }
+
+        if(id.endsWith('.send.response') && !id.endsWith('all.send.response')){
+            var regexSessionID = RegExp(/\[([^\[]+)\]$/,'g');
+            //SessionId aus text2command auslesen, falls vorher übergeben
+            let objSessionID = regexSessionID.exec(state.val);
+            if (objSessionID !== null) {
+                //Aufruf durch text2command mit enthaltener SessionID
+                //Abbruch, falls Filter zutrifft ("verstehe"), nur möglich von t2c
+                if (state.val.indexOf(adapter.config.filter) !== -1) {
+                    if (client) client.onStateChange('hermes/dialogueManager/endSession',{"sessionId":objSessionID[1]},'say');
+                } else {
+                    if (client) client.onStateChange('hermes/dialogueManager/endSession',{"sessionId":objSessionID[1], "text":state.val.substring(0,state.val.length - 39)},'say');
+                }
+                //text2command leeren, um nächste Ausgabe nicht an gleiches Ziel zu senden (SessionID)
+                adapter.setForeignState('text2command.' + adapter.config.topic + '.text', "");
+            }    
+        }
+
         if(id.endsWith('.send.text')){
             switch(id.split('.')[3]){
                 //Änderungen der Send.text-Instanzen überwachen
@@ -72,17 +130,7 @@ function startAdapter(options) {
                     //SessionId aus text2command auslesen, falls vorher übergeben
                     adapter.getForeignState('text2command.' + adapter.config.topic + '.text', function (err, t2cSessionID) {
                         let objSessionID = regexSessionID.exec(t2cSessionID.val);
-                        if (objSessionID !== null) {
-                            //Aufruf durch text2command mit enthaltener SessionID
-                            //Abbruch, falls Filter zutrifft ("verstehe"), nur möglich von t2c
-                            if (state.val.indexOf(adapter.config.filter) !== -1) {
-                                if (client) client.onStateChange('hermes/dialogueManager/endSession',{"sessionId":objSessionID[1]},'say');
-                            } else {
-                                if (client) client.onStateChange('hermes/dialogueManager/endSession',{"sessionId":objSessionID[1], "text":state.val},'say');
-                            }
-                            //text2command leeren, um nächste Ausgabe nicht an gleiches Ziel zu senden (SessionID)
-                            adapter.setForeignState('text2command.' + adapter.config.topic + '.text', "");
-                        } else {
+                        if (objSessionID == null) {
                             //direkter Aufruf ohne SessionID als Notification an alle Geräte
                             adapter.getDevices(function (err, devices) {
                                 let i;
@@ -118,6 +166,21 @@ function startAdapter(options) {
                     common: {
                         name: 'text for output',
                         desc: 'send text to snips',
+                        type: 'string',
+                        role: 'text',
+                        read: true,
+                        write: true
+                    },
+                    native: {}
+                }
+            );
+
+            adapter.setObjectNotExists(
+                adapter.namespace + '.devices.' + state.val + '.send.response', {
+                    type: 'state',
+                    common: {
+                        name: 'response with output',
+                        desc: 'send response to snips',
                         type: 'string',
                         role: 'text',
                         read: true,
@@ -229,7 +292,7 @@ function main() {
         },
         native: {}
     });
-    
+
     adapter.setObjectNotExists(adapter.namespace + '.devices.all.send.text', {
         type: 'state',
         common: {

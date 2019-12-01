@@ -1,8 +1,12 @@
 {
     "common": {
         "name": "kraftcomSnips",
-        "version": "1.6.0",
+        "version": "1.7.0",
         "news": {
+            "1.7.0": {
+                "en": "request support added",
+                "de": "Unterstützung für Rückfragen"
+            },
             "1.6.0": {
                 "en": "guestfolder support added",
                 "de": "Unterstützung für Gästemappe"

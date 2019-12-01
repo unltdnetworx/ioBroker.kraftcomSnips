@@ -71,6 +71,10 @@ sudo apt-get install -y snips-injection
 
 ## Changelog
 
+### 1.7.0
+
+* (unltdnetworx) request support added
+
 ### 1.6.0
 
 * (unltdnetworx) guestfolder support added
