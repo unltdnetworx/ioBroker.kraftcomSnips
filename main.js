@@ -306,6 +306,19 @@ function main() {
         native: {}
     });
 
+    adapter.setObjectNotExists(adapter.namespace + '.devices.all.send.response', {
+        type: 'state',
+        common: {
+            name: 'response from script',
+            desc: 'get response from script',
+            type: 'string',
+            role: 'text',
+            read: true,
+            write: true
+        },
+        native: {}
+    });
+
     adapter.setObjectNotExists(adapter.namespace + '.send.inject.room', {
         type: 'state',
         common: {
